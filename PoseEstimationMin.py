@@ -36,7 +36,9 @@ while (True):
         for id,lm in enumerate(results.pose_landmarks.landmark):
             h,w,c = img.shape
             cx, cy = int(lm.x * w), int(lm.y * h)
-            print(id,cx,cy)
+            # print(id,cx,cy)
+            if id==0:
+                cv2.circle(img,(cx,cy),5,(255,0,0),cv2.FILLED)
 
 
     k = cv2.waitKey(1)
