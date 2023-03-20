@@ -6,7 +6,7 @@ import PoseModule as pm
 cap = cv2.VideoCapture('ai-train/hand-work.mp4')
 if (cap.isOpened() == False):
     print("Unable to read camera feed")
-wCam, hCam = 640, 480
+# wCam, hCam = 640, 480
 count =0; dir= 0;pTime = 0;
 detector=pm.poseDetector()
 while True:
