@@ -19,32 +19,32 @@ class poseDetector():
         self.pose = self.mpPose.Pose((self.mode, self.complexity, self.smooth_landmarks, self.enable_sgm,
                                       self.smooth_sgm, self.detection_con, self.tracking_con))
 
-    def findPose(self, img, draw=True):
-        imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        results = self.pose.process(imgRGB)
-        bg = cv2.imread('bg2.png')
-        if results.pose_landmarks:
-            if draw:
-                self.mpDraw.draw_landmarks(bg, results.pose_landmarks, self.mpPose.POSE_CONNECTIONS,
-                                           self.mpDraw.DrawingSpec(color=(0, 0, 255), ),
-                                           self.mpDraw.DrawingSpec(color=(0, 255, 0), ))
-                self.mpDraw.draw_landmarks(img, results.pose_landmarks, self.mpPose.POSE_CONNECTIONS,
-                                           self.mpDraw.DrawingSpec(
-                                               color=(0, 0, 255), thickness=2, circle_radius=2),
-                                           self.mpDraw.DrawingSpec(color=(0, 255, 0), thickness=2, circle_radius=2))
-        return img
+
 
     def findPosition(self, img, draw=True,drawID=0):
 
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        results = self.pose.process(imgRGB)
-        for id, lm in enumerate(results.pose_landmarks.landmark):
+        self.results = self.pose.process(imgRGB)
+        for id, lm in enumerate(self.results.pose_landmarks.landmark):
             h, w, c = img.shape
             cx, cy = int(lm.x * w), int(lm.y * h)
-            # print(id,cx,cy)
-            if id == drawID:
-                cv2.circle(img, (cx, cy), 5, (255, 0, 0), cv2.FILLED)
+            if draw:
+                if id == drawID:
+                    cv2.circle(img, (cx, cy), 7, (255, 0, 0), cv2.FILLED)
 
+    def findPose(self, img, draw=True):
+
+        bg = cv2.imread('bg2.png')
+        if self.results.pose_landmarks:
+            if draw:
+                self.mpDraw.draw_landmarks(bg, self.results.pose_landmarks, self.mpPose.POSE_CONNECTIONS,
+                                           self.mpDraw.DrawingSpec(color=(0, 0, 255), ),
+                                           self.mpDraw.DrawingSpec(color=(0, 255, 0), ))
+                self.mpDraw.draw_landmarks(img, self.results.pose_landmarks, self.mpPose.POSE_CONNECTIONS,
+                                           self.mpDraw.DrawingSpec(
+                                               color=(0, 0, 255), thickness=2, circle_radius=2),
+                                           self.mpDraw.DrawingSpec(color=(0, 255, 0), thickness=2, circle_radius=2))
+        return img
 
 def main():
     pTime = 0
@@ -64,8 +64,8 @@ def main():
         pTime = cTime
         cv2.putText(img, str(int(fps)), (10, 60),
                     cv2.FONT_HERSHEY_PLAIN, 3, (0, 255, 0), 3)
+        detector.findPosition(img,drawID=23,draw=False)
         img = detector.findPose(img)
-        detector.findPosition(img,drawID=28)
 
         k = cv2.waitKey(1)
         cv2.imshow('Pose Estimation4', img)

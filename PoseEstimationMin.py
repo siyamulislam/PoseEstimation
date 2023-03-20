@@ -6,8 +6,8 @@ mpDraw = mp.solutions.drawing_utils
 mpPose=mp.solutions.pose;
 pose = mpPose.Pose()
 pTime = 0; cTime = 0;
-cap = cv2.VideoCapture('PoseVideos/3.mp4')
-# cap = cv2.VideoCapture(0)
+# cap = cv2.VideoCapture('PoseVideos/3.mp4')
+cap = cv2.VideoCapture(0)
 
 if (cap.isOpened() == False):
     print("Unable to read camera feed")
